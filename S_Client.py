@@ -2,6 +2,7 @@ class S_Client:
     def __init__(self, socket, addr):
         self.socket = socket
         self.addr = addr
+        self.user = None
 
     def send(self, data):
         self.socket.sendall(data.encode())
