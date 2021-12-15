@@ -49,3 +49,30 @@ class DBManager:
         sql = "SELECT * FROM USER_ WHERE ID=%s"
         self.curs.execute(sql, id)
         return self.curs
+
+    def search_by_name(self, name):
+        sql = "SELECT * FROM USER_ WHERE NAME_=%s"
+        self.curs.execute(sql, name)
+        return self.curs
+
+    def search_by_email(self, email):
+        sql = "SELECT * FROM USER_ WHERE EMAIL=%s"
+        self.curs.execute(sql, email)
+        return self.curs
+
+    def search_by_id_email(self, id, email):
+        sql = "SELECT * FROM USER_ WHERE ID=%s AND EMAIL=%s"
+        self.curs.execute(sql, (id, email))
+        return self.curs
+
+    def update_pwd(self, id, pwd):
+        sql = "UPDATE USER_ SET PWD=%s WHERE ID=%s"
+        self.curs.execute(sql, (pwd, id))
+        self.conn.commit()
+        return self.curs
+
+    def insertUser(self, id, pwd, email, name):
+        sql = "INSERT INTO USER_(ID, PWD, EMAIL, NAME_) VALUES(%s, %s, %s, %s)"
+        self.curs.execute(sql, (id, pwd, email, name))
+        self.conn.commit()
+        return self.curs

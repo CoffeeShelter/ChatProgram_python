@@ -53,9 +53,111 @@ class Client:
 
     def login(self):
         self.loginWindow = LoginWindow()
+        self.loginWindow.stackedWidget.setCurrentIndex(0)
         self.loginWindow.pushButton_login.clicked.connect(self.login_func)
+        self.loginWindow.pushButton_signup.clicked.connect(self.signup_func)
+        self.loginWindow.pushButton_findId.clicked.connect(self.findId_func)
+        self.loginWindow.pushButton_repwd.clicked.connect(self.repwd_func)
+        
+        self.loginWindow.signup_pushButton_create.clicked.connect(self.signup_create)
+        self.loginWindow.signup_pushButton_back.clicked.connect(self.signup_back)
+
+        self.loginWindow.findId_pushButton_search.clicked.connect(self.findId_search)
+        self.loginWindow.findId_pushButton_back.clicked.connect(self.findId_back)
+
+        self.loginWindow.repwd_pushButton_repwd.clicked.connect(self.repwd_repwd)
+        self.loginWindow.repwd_pushButton_back.clicked.connect(self.repwd_back)
 
         self.loginWindow.show()
+
+    def repwd_func(self):
+        self.loginWindow.stackedWidget.setCurrentIndex(3)
+
+        self.loginWindow.repwd_textEdit_id.setPlainText("")
+        self.loginWindow.repwd_textEdit_pwd.setPlainText("")
+        self.loginWindow.repwd_textEdit_email.setPlainText("")
+        self.loginWindow.repwd_label_info.setText("")
+
+    def repwd_repwd(self):
+        id = self.loginWindow.repwd_textEdit_id.toPlainText()
+        pwd = self.loginWindow.repwd_textEdit_pwd.toPlainText()
+        email = self.loginWindow.repwd_textEdit_email.toPlainText()
+
+        self.send("repwd_{}_{}_{}".format(id, pwd, email))
+        result = self.recv()
+        result = result.split('_')
+
+        if result[1] == "error":
+            self.loginWindow.repwd_label_info.setText("잘못된 정보 입니다.")
+            self.send("ok")
+        elif result[1] == "success":
+            self.loginWindow.stackedWidget.setCurrentIndex(0)
+            self.send("ok")
+
+    def findId_func(self):
+        self.loginWindow.stackedWidget.setCurrentIndex(2)
+
+        self.loginWindow.findId_textEdit_email.setPlainText("")
+        self.loginWindow.findId_label_info.setText("")
+
+    def findId_search(self):
+        email = self.loginWindow.findId_textEdit_email.toPlainText()
+
+        self.send("findId_{}".format(email))
+        result = self.recv()
+        result = result.split('_')
+
+        if result[1] == "error":
+            self.loginWindow.findId_label_info.setText("존재하지 않는 이메일 입니다.")
+            self.send("ok")
+        elif result[1] == "success":
+            id = result[2]
+            self.loginWindow.findId_label_info.setText("[아이디] : {}".format(id))
+            self.send("ok")
+        
+
+    def signup_create(self):
+        id = self.loginWindow.signup_textEdit_id.toPlainText()
+        pwd = self.loginWindow.signup_textEdit_pwd.toPlainText()
+        email = self.loginWindow.signup_textEdit_email.toPlainText()
+        name = self.loginWindow.signup_textEdit_name.toPlainText()
+
+        self.send("signup_{}_{}_{}_{}".format(id, pwd, email, name))
+        result = self.recv()
+        result = result.split('_')
+
+        if result[1] == "error":
+            msg = result[2]
+            if msg == "id":
+                self.loginWindow.signup_label_info.setText("존재하는 아이디 입니다.")
+                self.send("ok")
+
+            elif msg == "name":
+                self.loginWindow.signup_label_info.setText("존재하는 닉네임 입니다.")
+                self.send("ok")
+
+        elif result[1] == "success":
+            self.send("ok")
+            self.loginWindow.stackedWidget.setCurrentIndex(0)
+
+
+    def signup_func(self):
+        self.loginWindow.stackedWidget.setCurrentIndex(1)
+
+        self.loginWindow.signup_textEdit_id.setPlainText("")
+        self.loginWindow.signup_textEdit_pwd.setPlainText("")
+        self.loginWindow.signup_textEdit_email.setPlainText("")
+        self.loginWindow.signup_textEdit_name.setPlainText("")
+        self.loginWindow.signup_label_info.setText("")
+
+    def signup_back(self):
+        self.loginWindow.stackedWidget.setCurrentIndex(0)
+
+    def findId_back(self):
+        self.loginWindow.stackedWidget.setCurrentIndex(0)
+
+    def repwd_back(self):
+        self.loginWindow.stackedWidget.setCurrentIndex(0)
 
     def login_func(self):
         id = self.loginWindow.textEdit_id.toPlainText()
@@ -67,7 +169,6 @@ class Client:
         self.send("login_{}_{}".format(id, pwd))
 
         result = self.recv()
-        print(result)
         if result == "login_OK":
             self.send("ready")
             data = self.recv()
@@ -78,6 +179,8 @@ class Client:
             self.me.name = data[2]
             self.me.email = data[3]
             self.me.date = data[4]
+
+            self.send("login_complete")
 
             self.loginWindow.close()
             self.run()
@@ -91,13 +194,13 @@ class Client:
             data = self.recv()
 
             data = data.split('_')
-            if len(data) == 3:
-                if data[0] == "chat":
-                    name = data[1]
-                    msg = data[2]
+            if data[0] == "chat":
+                name = data[1]
+                msg = data[2]
 
-                    msg = "[{}] : {}".format(name, msg)
-                    self.chattingWindow.listWidget_chat.addItem(QListWidgetItem(msg))
+                msg = "[{}] : {}".format(name, msg)
+                self.chattingWindow.listWidget_chat.addItem(QListWidgetItem(msg))
+                self.send("thanks")
 
     def recv(self):
         data = ""
@@ -105,14 +208,6 @@ class Client:
         data = data.decode()
 
         return data
-        
-    def func(self,data):
-        if data == "stop":
-            self.stop()
-        else:
-            message = QListWidgetItem(data)
-            self.chattingWindow.listWidget_chat.addItem(message)
-            # print(data)
 
     def send(self, data):
         data = self.client_socket.sendall(data.encode())
