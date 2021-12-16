@@ -35,6 +35,7 @@ class Client:
     def chatting(self):
         self.chattingWindow = ChattingWindow(self)
         self.chattingWindow.pushButton.clicked.connect(self.chatting_func)
+        self.chattingWindow.label_info.setText("참여자")
 
         t = threading.Thread(target=self.recv_chat)
         t.daemon = True
@@ -200,7 +201,14 @@ class Client:
 
                 msg = "[{}] : {}".format(name, msg)
                 self.chattingWindow.listWidget_chat.addItem(QListWidgetItem(msg))
-                self.send("thanks")
+
+            if data[0] == "info":
+                self.chattingWindow.listWidget_info.clear()
+                count = data[1]
+                info = "참여자 [ {} 명 ]".format(count)
+                self.chattingWindow.label_info.setText(info)
+                for i in range(2, len(data)):
+                    self.chattingWindow.listWidget_info.addItem(QListWidgetItem(data[i]))
 
     def recv(self):
         data = ""

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>339</width>
+    <width>492</width>
     <height>580</height>
    </rect>
   </property>
@@ -28,6 +28,11 @@
    </property>
    <item>
     <widget class="QFrame" name="frame">
+     <property name="styleSheet">
+      <string notr="true">QFrame {
+	background-color : rgb(40, 44, 52);
+}</string>
+     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -51,6 +56,58 @@
        <number>0</number>
       </property>
       <item>
+       <widget class="QFrame" name="frame_4">
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QFrame" name="frame_5">
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <item>
+             <widget class="QLabel" name="label_info">
+              <property name="styleSheet">
+               <string notr="true">QLabel {
+	color: white;
+	font: bold 14px &quot;맑은 고딕&quot;;
+
+	border: 1px solid white;
+}</string>
+              </property>
+              <property name="text">
+               <string>참여자</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QListWidget" name="listWidget_info">
+              <property name="styleSheet">
+               <string notr="true">QListWidget::item{
+	color: white;
+	font: 12px bold &quot;맑은 고딕&quot;;
+}</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
        <widget class="QFrame" name="frame_3">
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
@@ -70,6 +127,14 @@
            <layout class="QVBoxLayout" name="verticalLayout">
             <item>
              <widget class="QLabel" name="label">
+              <property name="styleSheet">
+               <string notr="true">QLabel {
+	color: white;
+	font: bold 14px &quot;맑은 고딕&quot;;
+
+	border: 1px solid white;
+}</string>
+              </property>
               <property name="text">
                <string>채팅 프로그램</string>
               </property>
@@ -104,6 +169,12 @@
                 <height>430</height>
                </size>
               </property>
+              <property name="styleSheet">
+               <string notr="true">QListWidget::item{
+	color: white;
+	font: 12px bold &quot;맑은 고딕&quot;;
+}</string>
+              </property>
              </widget>
             </item>
            </layout>
@@ -123,8 +194,24 @@
               <property name="maximumSize">
                <size>
                 <width>16777215</width>
-                <height>30</height>
+                <height>34</height>
                </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QTextEdit {
+	margin: 1px;
+	min-height: 30px;
+	max-height: 30px;
+
+	border: none;
+	border-bottom: 2px solid;
+	
+	color: white;
+	font: bold 16px &quot;맑은 고딕&quot;;
+}
+QTextEdit:focus {
+	border-bottom: 2px solid rgb(85, 85, 85);
+}</string>
               </property>
              </widget>
             </item>
@@ -132,7 +219,7 @@
              <widget class="QPushButton" name="pushButton">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>50</width>
                 <height>30</height>
                </size>
               </property>
@@ -141,6 +228,28 @@
                 <width>16777215</width>
                 <height>30</height>
                </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QPushButton {
+	height: 40px;
+	border: 1px;
+	border-radius: 20px;
+
+	color: white;
+	font: bold 20px &quot;맑은 고딕&quot;;
+
+	background-color: rgb(73, 80, 95);
+}
+
+QPushButton:hover{
+	font: bold 20px &quot;맑은 고딕&quot;;
+	background-color: rgb(63, 70, 85);
+}
+
+QPushButton:pressed{
+	font: bold 20px &quot;맑은 고딕&quot;;
+	background-color: rgb(83, 90, 105);
+}</string>
               </property>
               <property name="text">
                <string>전송</string>

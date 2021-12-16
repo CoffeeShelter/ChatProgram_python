@@ -74,12 +74,23 @@ class Server:
 
         print("[{}] : 종료".format(user.name))
         self.remove(user)
+        self.sendInfo()
         user.client.stop()
 
-    def remove(self, user):
+    def remove(self, user_):
+        index = 0
+        for user in self.users:
+            if user.name == user_.name:
+                del self.users[index]
+                break
+            index+=1
+
+        """
         for i in range(len(self.users)):
             if user.name == self.users[i].name:
                 del self.users[i]
+
+        """ 
 
     def func(self, user, data):
         data = data.split('_')
@@ -174,12 +185,27 @@ class Server:
                     user.client.send(msg)
 
                     data = user.client.recv()
+                    self.sendInfo()
 
             else:
                 user.client.send("login_FAIL")
 
         else:
             user.client.send("login_FAIL")
+
+    def sendInfo(self):
+        msg = "info"
+        count = 0
+        for user in self.users:
+            if user.name is not None:
+                count += 1
+        msg = msg + "_{}".format(str(count))
+
+        for user in self.users:
+            if user.name is not None:
+                msg = msg + "_{}".format(user.name)
+
+        self.sendAll(msg)
 
     def stop(self):
         for user in self.users:
@@ -190,7 +216,8 @@ class Server:
 
     def sendAll(self, msg):
         for user in self.users:
-            user.client.send(msg)
+            if user.name is not None:
+                user.client.send(msg)
 
 if __name__ == "__main__":
     server = Server()
